@@ -64,4 +64,4 @@ logging.info('Run DIAMOND')
 
 #Get best hits
 DMNDBH = env['PREFIX'] + '_' + 'nr' + '_besthit.txt'
-env.BLAST_BESTHITS(source=DMNDOUT, target=DMNDBH, blast_names=blast_outfmt, env=env)
+env.BLAST_BESTHITS(source=DMNDOUT, target=DMNDBH, blast_names=blast_outfmt)
