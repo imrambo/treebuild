@@ -10,7 +10,7 @@ Author: Ian Rambo
 """
 
 logging_format = '%(levelname)s %(asctime)s - $(message)s'
-logging.basicConfig(filename = os.path.join(build_tmp, 'joblog'), level = logging.DEBUG, format = logging_format)
+logging.basicConfig(filename = 'joblog', level = logging.DEBUG, format = logging_format)
 logger = logging.getLogger()
 #------------------------------------------------------------------------------
 def check_string(source):
