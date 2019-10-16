@@ -131,14 +131,14 @@ if env['PREFIX']:
     logger = logging.getLogger()
 
 #Add custom builders to environment
-blast_besthit_bld = Builder(action = BLAST_BESTHITS)
-basename_bld = Builder(action = GET_BASENAME)
-builders = {'BLAST_BESTHITS' : blast_besthit_bld, 'GET_BASENAME' : basename_bld}
-env.Append(BUILDERS = builders)
+# blast_besthit_bld = Builder(action = BLAST_BESTHITS)
+# basename_bld = Builder(action = GET_BASENAME)
+# builders = {'BLAST_BESTHITS' : blast_besthit_bld, 'GET_BASENAME' : basename_bld}
+# env.Append(BUILDERS = builders)
 #------------------------------------------------------------------------------
 #If --rmbuild=1, remove the build targets in the temporary directory
 if GetOption('rmbuild'):
-    atexit.register(REMOVE_BUILD(source = build_tmp, env = env))
+    atexit.register(REMOVE_BUILD(build_tmp))
 
 else:
     pass

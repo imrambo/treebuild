@@ -56,7 +56,7 @@ env.Command([CENTROIDS,CONSOUT,UC], [DEREPGENES], """usearch -cluster_fast $SOUR
 logging.info('Run USEARCH cluster_fast')
 #------------------------------------------------------------------------------
 #DIAMOND
-DMNDOUT = env['PREFIX'] + '_' + env.GET_BASENAME(env['DMNDDB']) + '.txt'
+DMNDOUT = env['PREFIX'] + '_' + GET_BASENAME(env['DMNDDB']) + '.txt'
 #DMNDOUT = env['PREFIX'] + '_' + 'nr' + '.txt'
 
 blast_outfmt = ['qseqid','sseqid','pident','length','mismatch','gapopen','qstart','qend','sstart','send','evalue','bitscore','ppos','qcovhsp','qseq']
@@ -65,4 +65,4 @@ logging.info('Run DIAMOND')
 
 #Get best hits
 DMNDBH = env['PREFIX'] + '_' + 'nr' + '_besthit.txt'
-env.BLAST_BESTHITS([DMNDBH], [DMNDOUT])
+BLAST_BESTHITS([DMNDBH], [DMNDOUT])
