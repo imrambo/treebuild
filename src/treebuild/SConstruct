@@ -6,8 +6,6 @@ Author: Ian Rambo
 import os
 import atexit
 import logging
-import re
-import pandas as pd
 #------------------------------------------------------------------------------
 def REMOVE_BUILD(source, env):
     """
@@ -76,12 +74,6 @@ if env['PREFIX']:
     logging_format = '%(levelname)s %(asctime)s - $(message)s'
     logging.basicConfig(filename = os.path.join(build_tmp, 'joblog'), level = logging.DEBUG, format = logging_format)
     logger = logging.getLogger()
-
-#Add custom builders to environment
-# blast_besthit_bld = Builder(action = BLAST_BESTHITS)
-# basename_bld = Builder(action = GET_BASENAME)
-# builders = {'BLAST_BESTHITS' : blast_besthit_bld, 'GET_BASENAME' : basename_bld}
-# env.Append(BUILDERS = builders)
 #------------------------------------------------------------------------------
 #If --rmbuild=1, remove the build targets in the temporary directory
 if GetOption('rmbuild'):
