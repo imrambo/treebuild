@@ -80,49 +80,51 @@ cut -f10 | \
 cut -f1 -d';' | \
 cut -f2 -d'=' | \
 tee ${TARGETS[0]} | \
-pullseq -N -i ${SOURCES[2]} --min %d --max %d > ${TARGETS[1]}""" % (env['MINLEN'], env['MAXLEN']))
-#------------------------------------------------------------------------------
-CONGENES = env['PREFIX'] + '_neighbor_genes.faa'
-#Get hits for surrounding genes
-env.Command([CONGENES], [env['TARGETACC'],env['GFF'],env['SEQFILE']],
-"""
-grep -f ${SOURCES[0]} ${SOURCES[1]} | \
-grep "[[:space:]]CDS[[:space:]]" | \
-cut -f2 | \
-uniq | \
-awk '{print "[[:space:]]"$0"[[:space:]]"}' | \
-sed -e 's/^/\"/g' | \
-sed -e 's/$/\"/g' | \
-grep -f - ${SOURCES[1]} | \
-grep "[[:space:]]CDS[[:space:]]" | \
-cut -f2 | \
-grep -vf - ${SOURCES[1]} | \
-pullseq -N -i ${SOURCES[2]} --min %d --max %d > $TARGET
+pullseq -N -i ${SOURCES[2]} --min %d --max %d > ${TARGETS[1]}
 """ % (env['MINLEN'], env['MAXLEN'])
 )
-
 #------------------------------------------------------------------------------
-#USEARCH dereplicate
-DEREPGENES = env['PREFIX'] + '_derepped.faa'
-env.Command(['genes.fasta'], [CONGENES,TARGETGENES], """cat $SOURCES > $TARGET""")
-env.Command([DEREPGENES], ['genes.fasta'], """usearch -derep_fulllength $SOURCE -output $TARGET -minseqlength 1""")
-logging.info('Run USEARCH dereplicate')
-#------------------------------------------------------------------------------
-#USEARCH cluster
-CENTROIDS = env['PREFIX'] + '_derepped_cluster_centroids.faa'
-CONSOUT = env['PREFIX'] + '_derepped_cluster_consensus.faa'
-UC = env['PREFIX'] + '_derepped_cluster_results.faa'
-env.Command([CENTROIDS,CONSOUT,UC], [DEREPGENES], """usearch -cluster_fast $SOURCE -id %.2f -centroids ${TARGETS[0]} -consout ${TARGETS[1]} -threads %d -uc ${TARGETS[2]}""" % (env['PCTID'], env['DMNDTHREAD']))
-logging.info('Run USEARCH cluster_fast')
-#------------------------------------------------------------------------------
-#DIAMOND
-DMNDTBL = env['PREFIX'] + '_' + GET_BASENAME(env['DMNDDB']) + '.txt'
-#DMNDOUT = env['PREFIX'] + '_' + 'nr' + '.txt'
-
-blast_outfmt = ['qseqid','sseqid','pident','length','mismatch','gapopen','qstart','qend','sstart','send','evalue','bitscore','ppos','qcovhsp','qseq']
-env.Command([DMNDTBL], [CONGENES,TARGETGENES,env['DMNDDB']], 'cat ${SOURCES[:2]} | diamond %s --threads %d --db ${SOURCES[2]} --out $TARGET --header --more-sensitive --outfmt 6 %s' % (env['DMNDMETHOD'], env['DMNDTHREAD'], ' '.join(blast_outfmt)))
-logging.info('Run DIAMOND')
-
-#Get best hits
-DMNDBH = env['PREFIX'] + '_' + 'nr' + '_besthit.txt'
-env.BLAST_BESTHITS([DMNDBH], [DMNDTBL])
+# CONGENES = env['PREFIX'] + '_neighbor_genes.faa'
+# #Get hits for surrounding genes
+# env.Command([CONGENES], [env['TARGETACC'],env['GFF'],env['SEQFILE']],
+# """
+# grep -f ${SOURCES[0]} ${SOURCES[1]} | \
+# grep "[[:space:]]CDS[[:space:]]" | \
+# cut -f2 | \
+# uniq | \
+# awk '{print "[[:space:]]"$0"[[:space:]]"}' | \
+# sed -e 's/^/\"/g' | \
+# sed -e 's/$/\"/g' | \
+# grep -f - ${SOURCES[1]} | \
+# grep "[[:space:]]CDS[[:space:]]" | \
+# cut -f2 | \
+# grep -vf - ${SOURCES[1]} | \
+# pullseq -N -i ${SOURCES[2]} --min %d --max %d > $TARGET
+# """ % (env['MINLEN'], env['MAXLEN'])
+# )
+#
+# #------------------------------------------------------------------------------
+# #USEARCH dereplicate
+# DEREPGENES = env['PREFIX'] + '_derepped.faa'
+# env.Command(['genes.fasta'], [CONGENES,TARGETGENES], """cat $SOURCES > $TARGET""")
+# env.Command([DEREPGENES], ['genes.fasta'], """usearch -derep_fulllength $SOURCE -output $TARGET -minseqlength 1""")
+# logging.info('Run USEARCH dereplicate')
+# #------------------------------------------------------------------------------
+# #USEARCH cluster
+# CENTROIDS = env['PREFIX'] + '_derepped_cluster_centroids.faa'
+# CONSOUT = env['PREFIX'] + '_derepped_cluster_consensus.faa'
+# UC = env['PREFIX'] + '_derepped_cluster_results.faa'
+# env.Command([CENTROIDS,CONSOUT,UC], [DEREPGENES], """usearch -cluster_fast $SOURCE -id %.2f -centroids ${TARGETS[0]} -consout ${TARGETS[1]} -threads %d -uc ${TARGETS[2]}""" % (env['PCTID'], env['DMNDTHREAD']))
+# logging.info('Run USEARCH cluster_fast')
+# #------------------------------------------------------------------------------
+# #DIAMOND
+# DMNDTBL = env['PREFIX'] + '_' + GET_BASENAME(env['DMNDDB']) + '.txt'
+# #DMNDOUT = env['PREFIX'] + '_' + 'nr' + '.txt'
+#
+# blast_outfmt = ['qseqid','sseqid','pident','length','mismatch','gapopen','qstart','qend','sstart','send','evalue','bitscore','ppos','qcovhsp','qseq']
+# env.Command([DMNDTBL], [CONGENES,TARGETGENES,env['DMNDDB']], 'cat ${SOURCES[:2]} | diamond %s --threads %d --db ${SOURCES[2]} --out $TARGET --header --more-sensitive --outfmt 6 %s' % (env['DMNDMETHOD'], env['DMNDTHREAD'], ' '.join(blast_outfmt)))
+# logging.info('Run DIAMOND')
+#
+# #Get best hits
+# DMNDBH = env['PREFIX'] + '_' + 'nr' + '_besthit.txt'
+# env.BLAST_BESTHITS([DMNDBH], [DMNDTBL])
