@@ -110,9 +110,9 @@ env.Command([DEREPGENES], [CONGENES,TARGETGENES], """cat $SOURCES | usearch -der
 logging.info('Run USEARCH dereplicate')
 #------------------------------------------------------------------------------
 #USEARCH cluster
-CENTROIDS = env['PREFIX'] + '_derepped_centroids.faa'
-CONSOUT = env['PREFIX'] + '_derepped_consensus.faa'
-UC = env['PREFIX'] + '_derepped_results.faa'
+CENTROIDS = env['PREFIX'] + '_derepped_cluster_centroids.faa'
+CONSOUT = env['PREFIX'] + '_derepped_cluster_consensus.faa'
+UC = env['PREFIX'] + '_derepped_cluster_results.faa'
 env.Command([CENTROIDS,CONSOUT,UC], [DEREPGENES], """usearch -cluster_fast $SOURCE -id %f -centroids ${TARGETS[0]} -consout ${TARGETS[1]} -threads %d -uc ${TARGETS[2]}""" % (env['PCTID'], env['DMNDTHREAD']))
 logging.info('Run USEARCH cluster_fast')
 #------------------------------------------------------------------------------
