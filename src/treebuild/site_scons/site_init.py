@@ -7,7 +7,7 @@ def check_string(source):
     """
     Check if string is binary (return True) or not (return False)
     """
-    p = set(string)
+    p = set(source)
     s = {'0', '1'}
 
     if s == p or p == {'0'} or p == {'1'}:
