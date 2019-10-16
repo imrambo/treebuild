@@ -114,7 +114,7 @@ logging.info('Run USEARCH dereplicate')
 CENTROIDS = env['PREFIX'] + '_derepped_cluster_centroids.faa'
 CONSOUT = env['PREFIX'] + '_derepped_cluster_consensus.faa'
 UC = env['PREFIX'] + '_derepped_cluster_results.faa'
-env.Command([CENTROIDS,CONSOUT,UC], [DEREPGENES], """usearch -cluster_fast $SOURCE -id %f -centroids ${TARGETS[0]} -consout ${TARGETS[1]} -threads %d -uc ${TARGETS[2]}""" % (env['PCTID'], env['DMNDTHREAD']))
+env.Command([CENTROIDS,CONSOUT,UC], [DEREPGENES], """usearch -cluster_fast $SOURCE -id %.2f -centroids ${TARGETS[0]} -consout ${TARGETS[1]} -threads %d -uc ${TARGETS[2]}""" % (env['PCTID'], env['DMNDTHREAD']))
 logging.info('Run USEARCH cluster_fast')
 #------------------------------------------------------------------------------
 #DIAMOND
