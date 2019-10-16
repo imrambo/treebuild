@@ -3,7 +3,26 @@ import os
 import re
 import pandas as pd
 #------------------------------------------------------------------------------
+def check_string(source):
+    """
+    Check if string is binary (return True) or not (return False)
+    """
+    p = set(string)
+    s = {'0', '1'}
+
+    if s == p or p == {'0'} or p == {'1'}:
+        return True
+    else :
+        return False
+#------------------------------------------------------------------------------
 def get_basename(file_path):
+    """
+    Get the basename of a file and remove all extensions
+    """
+    if check_string(file_path):
+        file_path = file_path.decode('ascii')
+    else:
+        pass
     basename = os.path.basename(file_path)
     #Remove two extensions, e.g. foo.tar.gz becomes foo
     if re.match(r'^.*?\.[a-z]+\.[a-z]+$', basename):
