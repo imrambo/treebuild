@@ -29,7 +29,7 @@ def get_basename(file_path):
         basename = re.findall(r'^(.*?)\.[a-z]+\.[a-z]+$', basename)[0]
     else:
         basename = os.path.splitext(basename)[0]
-        
+
     if check_string(basename):
         basename = basename.decode('ascii')
     else:
@@ -60,7 +60,7 @@ def REMOVE_BUILD(source, env):
         pass
     return None
 #------------------------------------------------------------------------------
-def BLAST_BESTHITS(target, source, blast_names, env):
+def BLAST_BESTHITS(target, source, env):
     """
     Get the best hit for each target AA sequence from HMMER3 domain
     table output. The best hit is based on:
@@ -69,6 +69,7 @@ def BLAST_BESTHITS(target, source, blast_names, env):
     3. max alignment length
     4. max query coverage at high-scoring segment pair
     """
+    blast_names = ['qseqid','sseqid','pident','length','mismatch','gapopen','qstart','qend','sstart','send','evalue','bitscore','ppos','qcovhsp','qseq']
 
     blasttbl = pd.read_csv(source, comment='#', header=None,
     names = blast_names, sep = '\s+')
@@ -78,4 +79,5 @@ def BLAST_BESTHITS(target, source, blast_names, env):
     #return blast_agg
     blast_agg.to_csv(target, sep = '\t', encoding='utf-8', header = True, index = False)
 
+    # blast_besthit_bld = Builder(action = BLAST_BESTHITS)
     return None
