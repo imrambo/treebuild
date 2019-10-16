@@ -29,6 +29,12 @@ def get_basename(file_path):
         basename = re.findall(r'^(.*?)\.[a-z]+\.[a-z]+$', basename)[0]
     else:
         basename = os.path.splitext(basename)[0]
+        
+    if check_string(basename):
+        basename = basename.decode('ascii')
+    else:
+        pass
+
     return basename
 #------------------------------------------------------------------------------
 def REMOVE_BUILD(source, env):
