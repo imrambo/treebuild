@@ -1,4 +1,5 @@
 #!/bin/bash
+#Conda environment for treebuild SCons build
 envName=$1
 conda create -n $envName python=3.7 && \
 conda install -n $envName -c conda-forge scons && \

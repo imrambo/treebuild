@@ -12,7 +12,7 @@ def get_basename(file_path):
         basename = os.path.splitext(basename)[0]
     return basename
 #------------------------------------------------------------------------------
-def REMOVE_BUILD(source):
+def REMOVE_BUILD(source, env):
     """
     Remove intermediate build targets within a specified temporary directory.
     """
@@ -35,7 +35,7 @@ def REMOVE_BUILD(source):
         pass
     return None
 #------------------------------------------------------------------------------
-def BLAST_BESTHITS(target, source, blast_names):
+def BLAST_BESTHITS(target, source, blast_names, env):
     """
     Get the best hit for each target AA sequence from HMMER3 domain
     table output. The best hit is based on:
