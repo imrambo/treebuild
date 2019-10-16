@@ -6,7 +6,66 @@ import logging
 Motivation:
 Author: Ian Rambo
 """
+#------------------------------------------------------------------------------
+def check_string(source, env):
+    """
+    Check if string is binary (return True) or not (return False)
+    """
+    p = set(source)
+    s = {'0', '1'}
 
+    if s == p or p == {'0'} or p == {'1'}:
+        return True
+    else :
+        return False
+#------------------------------------------------------------------------------
+def GET_BASENAME(file_path, env):
+    """
+    Get the basename of a file and remove all extensions
+    """
+    if check_string(file_path):
+        file_path = file_path.decode('ascii')
+    else:
+        pass
+    basename = os.path.basename(file_path)
+    #Remove two extensions, e.g. foo.tar.gz becomes foo
+    if re.match(r'^.*?\.[a-z]+\.[a-z]+$', basename):
+        basename = re.findall(r'^(.*?)\.[a-z]+\.[a-z]+$', basename)[0]
+    else:
+        basename = os.path.splitext(basename)[0]
+
+    if check_string(basename):
+        basename = basename.decode('ascii')
+    else:
+        pass
+
+    return basename
+#------------------------------------------------------------------------------
+def BLAST_BESTHITS(target, source, env):
+    """
+    Get the best hit for each target AA sequence from HMMER3 domain
+    table output. The best hit is based on:
+    1. min independent e-value
+    2. max bitscore
+    3. max alignment length
+    4. max query coverage at high-scoring segment pair
+    """
+    blast_names = ['qseqid','sseqid','pident','length','mismatch','gapopen','qstart','qend','sstart','send','evalue','bitscore','ppos','qcovhsp','qseq']
+
+    blasttbl = pd.read_csv(source, comment='#', header=None,
+    names = blast_names, sep = '\s+')
+
+    aggregations = {'qseqid':'first', 'evalue':min, 'ppos':max, 'bitscore':max, 'length':max, 'qcovhsp':max}
+    blast_agg = blasttbl.groupby(['target_name'], as_index = False).agg(aggregations)
+
+    blast_agg.to_csv(target, sep = '\t', encoding='utf-8', header = True, index = False)
+    return None
+
+#Add custom builders to environment
+blast_besthit_bld = Builder(action = BLAST_BESTHITS)
+builders = {'BLAST_BESTHITS' : blast_besthit_bld}
+env.Append(BUILDERS = builders)
+#------------------------------------------------------------------------------
 TARGETGENES = env['PREFIX'] + '_proteins.faa'
 TARGETACC_GENEID = env['PREFIX'] + '_target_hit_accessions.txt'
 
@@ -56,13 +115,13 @@ env.Command([CENTROIDS,CONSOUT,UC], [DEREPGENES], """usearch -cluster_fast $SOUR
 logging.info('Run USEARCH cluster_fast')
 #------------------------------------------------------------------------------
 #DIAMOND
-DMNDOUT = env['PREFIX'] + '_' + GET_BASENAME(env['DMNDDB']) + '.txt'
+DMNDTBL = env['PREFIX'] + '_' + GET_BASENAME(env['DMNDDB']) + '.txt'
 #DMNDOUT = env['PREFIX'] + '_' + 'nr' + '.txt'
 
 blast_outfmt = ['qseqid','sseqid','pident','length','mismatch','gapopen','qstart','qend','sstart','send','evalue','bitscore','ppos','qcovhsp','qseq']
-env.Command([DMNDOUT], [CONGENES,TARGETGENES,env['DMNDDB']], 'cat ${SOURCES[:2]} | diamond %s --threads %d --db ${SOURCES[2]} --out $TARGET --header --more-sensitive --outfmt 6 %s' % (env['DMNDMETHOD'], env['DMNDTHREAD'], ' '.join(blast_outfmt)))
+env.Command([DMNDTBL], [CONGENES,TARGETGENES,env['DMNDDB']], 'cat ${SOURCES[:2]} | diamond %s --threads %d --db ${SOURCES[2]} --out $TARGET --header --more-sensitive --outfmt 6 %s' % (env['DMNDMETHOD'], env['DMNDTHREAD'], ' '.join(blast_outfmt)))
 logging.info('Run DIAMOND')
 
 #Get best hits
 DMNDBH = env['PREFIX'] + '_' + 'nr' + '_besthit.txt'
-BLAST_BESTHITS([DMNDBH], [DMNDOUT])
+env.BLAST_BESTHITS([DMNDBH], [DMNDTBL])
