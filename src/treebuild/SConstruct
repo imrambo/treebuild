@@ -70,10 +70,6 @@ env = Environment(MINLEN=GetOption('minlen'),
 if env['PREFIX']:
     build_tmp = env['PREFIX'] + '_build'
     SConscript(['SConscript'], exports='env', variant_dir=build_tmp, duplicate=0)
-
-    logging_format = '%(levelname)s %(asctime)s - $(message)s'
-    logging.basicConfig(filename = os.path.join(build_tmp, 'joblog'), level = logging.DEBUG, format = logging_format)
-    logger = logging.getLogger()
 #------------------------------------------------------------------------------
 #If --rmbuild=1, remove the build targets in the temporary directory
 if GetOption('rmbuild'):

@@ -8,6 +8,10 @@ import pandas as pd
 Motivation:
 Author: Ian Rambo
 """
+
+logging_format = '%(levelname)s %(asctime)s - $(message)s'
+logging.basicConfig(filename = os.path.join(build_tmp, 'joblog'), level = logging.DEBUG, format = logging_format)
+logger = logging.getLogger()
 #------------------------------------------------------------------------------
 def check_string(source):
     """
@@ -106,20 +110,12 @@ grep -vf ${SOURCES[2]} | \
 pullseq -N -i ${SOURCES[2]} --min %d --max %d > $TARGET
 """ % (env['MINLEN'], env['MAXLEN'])
 )
-# grep -f ${SOURCES[0]} ${SOURCES[1]} | \
-# grep "[[:space:]]CDS[[:space:]]" | \
-# cut -f2 | \
-# uniq | \
-# awk '{print "[[:space:]]"$0"[[:space:]]"}' | \
-# sed -e 's/^/\"/g' | \
-# sed -e 's/$/\"/g' | \
-
 # #------------------------------------------------------------------------------
-# #USEARCH dereplicate
-# DEREPGENES = env['PREFIX'] + '_derepped.faa'
-# env.Command(['genes.fasta'], [CONGENES,TARGETGENES], """cat $SOURCES > $TARGET""")
-# env.Command([DEREPGENES], ['genes.fasta'], """usearch -derep_fulllength $SOURCE -output $TARGET -minseqlength 1""")
-# logging.info('Run USEARCH dereplicate')
+#USEARCH dereplicate
+DEREPGENES = env['PREFIX'] + '_derepped.faa'
+env.Command(['genes.fasta'], [CONGENES,TARGETGENES], """cat $SOURCES > $TARGET""")
+env.Command([DEREPGENES], ['genes.fasta'], """usearch -derep_fulllength $SOURCE -output $TARGET -minseqlength 1""")
+logging.info('Run USEARCH dereplicate')
 # #------------------------------------------------------------------------------
 # #USEARCH cluster
 # CENTROIDS = env['PREFIX'] + '_derepped_cluster_centroids.faa'
