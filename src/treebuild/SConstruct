@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """
 Motivation: extract, dereplicate, cluster, and align sequences for trees.
+Author: Ian Rambo
 """
 import os
 import atexit
@@ -51,10 +52,12 @@ if env['PREFIX']:
     logging.basicConfig(filename = os.path.join(build_tmp, 'joblog'), level = logging.DEBUG, format = logging_format)
     logger = logging.getLogger()
 
+#Add custom functions to environment
 blast_besthit_bld = Builder(action = BLAST_BESTHITS)
 rm_build_bld = Builder(action = REMOVE_BUILD)
 
-env.Append(BUILDERS = {'BLAST_BESTHITS' : blast_besthit_bld, 'REMOVE_BUILD' : rm_build_bld})
+builders = {'BLAST_BESTHITS' : blast_besthit_bld, 'REMOVE_BUILD' : rm_build_bld}
+env.Append(BUILDERS = builders)
 #------------------------------------------------------------------------------
 #If --rmbuild=1, remove the build targets in the temporary directory
 if GetOption('rmbuild'):
