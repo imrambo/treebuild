@@ -80,9 +80,7 @@ cut -f10 | \
 cut -f1 -d';' | \
 cut -f2 -d'=' | \
 tee ${TARGETS[0]} | \
-pullseq -N -i ${SOURCES[2]} --min %d --max %d > ${TARGETS[1]}
-""" % (env['MINLEN'], env['MAXLEN'])
-)
+pullseq -N -i ${SOURCES[2]} --min %d --max %d > ${TARGETS[1]}""" % (env['MINLEN'], env['MAXLEN']))
 #------------------------------------------------------------------------------
 CONGENES = env['PREFIX'] + '_neighbor_genes.faa'
 #Get hits for surrounding genes
