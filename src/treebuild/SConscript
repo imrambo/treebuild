@@ -20,6 +20,7 @@ pullseq -N -i ${SOURCES[2]} --min %s --max %s > ${TARGETS[1]}
 """ % (env['MINLEN'], env['MAXLEN'])
 )
 #------------------------------------------------------------------------------
+CONGENES = env['PREFIX'] + '_neighbor_genes.faa'
 #Get hits for surrounding genes
 env.Command([CONGENES], [env['TARGETACC'],GFF,TARGETACC_GENEID,GENES],
 """
