@@ -5,6 +5,7 @@ Motivation: extract, dereplicate, cluster, and align sequences for trees.
 import os
 import atexit
 import logging
+import re
 
 AddOption('--gff', dest='gff', type='string', nargs=1,
 action='store', help='gff file')

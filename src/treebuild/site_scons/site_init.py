@@ -11,7 +11,7 @@ def BLAST_BESTHITS(source, target, blast_names, env):
     4. max query coverage at high-scoring segment pair
     """
     import pandas as pd
-
+    
     blasttbl = pd.read_csv(source, comment='#', header=None,
     names = blast_names, sep = '\s+')
 

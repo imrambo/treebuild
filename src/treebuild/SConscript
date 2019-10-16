@@ -50,11 +50,11 @@ env.Command([CENTROIDS,CONSOUT,UC], [DEREPGENES], """usearch -cluster_fast $SOUR
 logging.info('Run USEARCH cluster_fast')
 #------------------------------------------------------------------------------
 #DIAMOND
-DMNDOUT = os.path.join(env['OUTDIR'], env['PREFIX'] + '_' + basename(env['DMNDDB']) + '.txt')
+DMNDOUT = os.path.join(env['OUTDIR'], env['PREFIX'] + '_' + get_basename(env['DMNDDB']) + '.txt')
 blast_outfmt = ['6','qseqid','sseqid','pident','length','mismatch','gapopen','qstart','qend','sstart','send','evalue','bitscore','ppos','qcovhsp','qseq']
 env.Command([DMNDOUT], [CONGENES,TARGETGENES,env['DMNDDB']], 'cat ${SOURCES[:2]} | diamond %s --threads %d --db ${SOURCES[2]} --out $TARGET --header --more-sensitive --outfmt %s' % (env['DMNDMETHOD'], env['DMNDTHREAD'], ' '.join(blast_outfmt)))
 logging.info('Run DIAMOND')
 
 #Get best hits
-DMNDBH = os.path.join(env['OUTDIR'], env['PREFIX'] + '_' + basename(env['DMNDDB']) + '_besthit.txt')
+DMNDBH = os.path.join(env['OUTDIR'], env['PREFIX'] + '_' + get_basename(env['DMNDDB']) + '_besthit.txt')
 env.BLAST_BESTHITS(source=DMNDOUT, target=DMNDBH, blast_names=blast_outfmt[1:])
