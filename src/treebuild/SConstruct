@@ -14,7 +14,7 @@ AddOption('--outdir', dest = 'outdir', type = 'string', nargs = 1,
 action = 'store', help = 'path to output directory')
 AddOption('--minlen', dest = 'minlen', type = 'int', nargs = 1,
 action = 'store', help = 'minimum sequence length')
-AddOption('--maxlen', dest = 'maxlen', type = 'int', nargs = 1,
+AddOption('--maxlen', dest = 'maxlen', type = 'int', nargs = *,
 action = 'store', help = 'minimum sequence length')
 AddOption('--accessions', dest = 'accessions', type = 'string',
 nargs = 1, action = 'store', help = 'gene accessions to target')
@@ -76,7 +76,7 @@ env = Environment(MINLEN=GetOption('minlen'),
                           PREFIX=GetOption('prefix'),
                           PCTID=GetOption('pctid'))
 if env['PREFIX']:
-    build_tmp = basename(env['PREFIX'] + '_build')
+    build_tmp = get_basename(env['PREFIX'] + '_build')
     SConscript(['SConscript'], exports='env', variant_dir=build_tmp, duplicate=0)
 
     logging_format = '%(levelname)s %(asctime)s - $(message)s'
