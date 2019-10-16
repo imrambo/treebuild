@@ -84,10 +84,28 @@ pullseq -N -i ${SOURCES[2]} --min %d --max %d > ${TARGETS[1]}
 """ % (env['MINLEN'], env['MAXLEN'])
 )
 #------------------------------------------------------------------------------
-# CONGENES = env['PREFIX'] + '_neighbor_genes.faa'
-# #Get hits for surrounding genes
-# env.Command([CONGENES], [env['TARGETACC'],env['GFF'],env['SEQFILE']],
-# """
+#Get hits for surrounding genes
+CONTIGPAT='contig_patterns.txt'
+env.Command([CONTIGPAT], [env['TARGETACC'],env['GFF'],env['SEQFILE']],
+"""
+grep -f ${SOURCES[0]} ${SOURCES[1]} | \
+grep "[[:space:]]CDS[[:space:]]" | \
+cut -f2 | \
+uniq | \
+awk '{print "[[:space:]]"$0"[[:space:]]"}' | \
+sed -e 's/^/\"/g' | \
+sed -e 's/$/\"/g' > $TARGET"""
+
+CONGENES = env['PREFIX'] + '_neighbor_genes.faa'
+
+env.Command([CONGENES], [CONTIGPAT,env['GFF'],env['TARGETACC'],env['SEQFILE']],
+"""
+grep -f ${SOURCES[0]} ${SOURCES[1]} | \
+grep "[[:space:]]CDS[[:space:]]" | \
+grep -vf ${SOURCES[2]} | \
+pullseq -N -i ${SOURCES[2]} --min %d --max %d > $TARGET
+""" % (env['MINLEN'], env['MAXLEN'])
+)
 # grep -f ${SOURCES[0]} ${SOURCES[1]} | \
 # grep "[[:space:]]CDS[[:space:]]" | \
 # cut -f2 | \
@@ -95,14 +113,7 @@ pullseq -N -i ${SOURCES[2]} --min %d --max %d > ${TARGETS[1]}
 # awk '{print "[[:space:]]"$0"[[:space:]]"}' | \
 # sed -e 's/^/\"/g' | \
 # sed -e 's/$/\"/g' | \
-# grep -f - ${SOURCES[1]} | \
-# grep "[[:space:]]CDS[[:space:]]" | \
-# cut -f2 | \
-# grep -vf - ${SOURCES[1]} | \
-# pullseq -N -i ${SOURCES[2]} --min %d --max %d > $TARGET
-# """ % (env['MINLEN'], env['MAXLEN'])
-# )
-#
+
 # #------------------------------------------------------------------------------
 # #USEARCH dereplicate
 # DEREPGENES = env['PREFIX'] + '_derepped.faa'
