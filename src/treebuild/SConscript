@@ -7,7 +7,7 @@ Motivation:
 Author: Ian Rambo
 """
 #------------------------------------------------------------------------------
-def check_string(source, env):
+def check_string(source):
     """
     Check if string is binary (return True) or not (return False)
     """
