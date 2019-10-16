@@ -80,7 +80,7 @@ cut -f10 | \
 cut -f1 -d';' | \
 cut -f2 -d'=' | \
 tee ${TARGETS[0]} | \
-pullseq -N -i ${SOURCES[2]} --min %s --max %s > ${TARGETS[1]}
+pullseq -N -i ${SOURCES[2]} --min %d --max %d > ${TARGETS[1]}
 """ % (env['MINLEN'], env['MAXLEN'])
 )
 #------------------------------------------------------------------------------
@@ -99,7 +99,7 @@ grep -f - ${SOURCES[1]} | \
 grep "[[:space:]]CDS[[:space:]]" | \
 cut -f2 | \
 grep -vf - ${SOURCES[1]} | \
-pullseq -N -i ${SOURCES[2]} --min %s --max %s > $TARGET
+pullseq -N -i ${SOURCES[2]} --min %d --max %d > $TARGET
 """ % (env['MINLEN'], env['MAXLEN'])
 )
 
