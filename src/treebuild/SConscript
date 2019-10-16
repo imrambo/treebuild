@@ -94,7 +94,7 @@ cut -f2 | \
 uniq | \
 awk '{print "[[:space:]]"$0"[[:space:]]"}' | \
 sed -e 's/^/\"/g' | \
-sed -e 's/$/\"/g' > $TARGET"""
+sed -e 's/$/\"/g' > $TARGET""")
 
 CONGENES = env['PREFIX'] + '_neighbor_genes.faa'
 
