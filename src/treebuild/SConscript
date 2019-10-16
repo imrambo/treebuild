@@ -57,6 +57,7 @@ logging.info('Run USEARCH cluster_fast')
 #DIAMOND
 #DMNDOUT = env['PREFIX'] + '_' + get_basename(env['DMNDDB']) + '.txt'
 DMNDOUT = env['PREFIX'] + '_' + 'nr' + '.txt'
+print(DMNDOUT)
 DMNDOUT = DMNDOUT.decode('ascii')
 blast_outfmt = ['qseqid','sseqid','pident','length','mismatch','gapopen','qstart','qend','sstart','send','evalue','bitscore','ppos','qcovhsp','qseq']
 env.Command([DMNDOUT], [CONGENES,TARGETGENES,env['DMNDDB']], 'cat ${SOURCES[:2]} | diamond %s --threads %d --db ${SOURCES[2]} --out $TARGET --header --more-sensitive --outfmt 6 %s' % (env['DMNDMETHOD'], env['DMNDTHREAD'], ' '.join(blast_outfmt)))
