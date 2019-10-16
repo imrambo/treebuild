@@ -1,0 +1,60 @@
+Import('env')
+import os
+import logging
+
+TARGETGENES = os.path.join(env['OUTDIR'], env['PREFIX'] + '_proteins.faa')
+TARGETACC_GENEID = os.path.join(env['OUTDIR'], env['PREFIX'] + '_target_hit_accessions.txt')
+
+#Get hits for target gene
+env.Command([TARGETACC_GENEID,TARGETGENES], [env['TARGETACC'],env['GFF'],env['SEQFILE']],
+"""
+grep -f ${SOURCES[0]} ${SOURCES[1]} | \
+grep "[[:space:]]CDS[[:space:]]" | \
+cut -f10 | \
+cut -f1 -d';' | \
+cut -f2 -d'=' | \
+tee ${TARGETS[0]} | \
+pullseq -N -i ${SOURCES[2]} --min %s --max %s > ${TARGETS[1]}
+""" % (env['MINLEN'], env['MAXLEN'])
+)
+#------------------------------------------------------------------------------
+#Get hits for surrounding genes
+env.Command([TARGETACC,GFF,TARGETACC_GENEID,GENES], [CONGENES],
+"""
+grep -f ${SOURCES[0]} ${SOURCES[1]} | \
+grep "[[:space:]]CDS[[:space:]]" | \
+cut -f2 | \
+uniq | \
+awk '{print "[[:space:]]"$0"[[:space:]]"}' | \
+sed -e 's/^/\"/g' | \
+sed -e 's/$/\"/g' | \
+grep -f - ${SOURCES[1]} | \
+grep "[[:space:]]CDS[[:space:]]" | \
+cut -f2 | \
+grep -vf - ${SOURCES[1]} | \
+pullseq -N -i ${SOURCES[3]} --min %s --max %s > $TARGET
+""" % (env['MINLEN'], env['MAXLEN'])
+)
+
+#------------------------------------------------------------------------------
+#USEARCH dereplicate
+DEREPGENES = os.path.join(env['OUTDIR'], env['PREFIX'] + '_derepped.faa')
+env.Command([DEREPGENES], [CONGENES,TARGETGENES], """cat $SOURCES | usearch -derep_fulllength - -output $TARGET -minseqlength 1""")
+logging.info('Run USEARCH dereplicate')
+#------------------------------------------------------------------------------
+#USEARCH cluster
+CENTROIDS = os.path.join(env['OUTDIR'], env['PREFIX'] + '_derepped_centroids.faa')
+CONSOUT = os.path.join(env['OUTDIR'], env['PREFIX'] + '_derepped_consensus.faa')
+UC = os.path.join(env['OUTDIR'], env['PREFIX'] + '_derepped_results.faa')
+env.Command([CENTROIDS,CONSOUT,UC], [DEREPGENES], """usearch -cluster_fast $SOURCE -id %f -centroids ${TARGETS[0]} -consout ${TARGETS[1]} -threads %d -uc ${TARGETS[2]}""" % (env['PCTID'], env['DMNDTHREAD']))
+logging.info('Run USEARCH cluster_fast')
+#------------------------------------------------------------------------------
+#DIAMOND
+DMNDOUT = os.path.join(env['OUTDIR'], env['PREFIX'] + '_' + basename(env['DMNDDB']) + '.txt')
+blast_outfmt = ['6','qseqid','sseqid','pident','length','mismatch','gapopen','qstart','qend','sstart','send','evalue','bitscore','ppos','qcovhsp','qseq']
+env.Command([DMNDOUT], [CONGENES,TARGETGENES,env['DMNDDB']], 'cat ${SOURCES[:2]} | diamond %s --threads %d --db ${SOURCES[2]} --out $TARGET --header --more-sensitive --outfmt %s' % (env['DMNDMETHOD'], env['DMNDTHREAD'], ' '.join(blast_outfmt)))
+logging.info('Run DIAMOND')
+
+#Get best hits
+DMNDBH = os.path.join(env['OUTDIR'], env['PREFIX'] + '_' + basename(env['DMNDDB']) + '_besthit.txt')
+env.BLAST_BESTHITS(source=DMNDOUT, target=DMNDBH, blast_names=blast_outfmt[1:])
