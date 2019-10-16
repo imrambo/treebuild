@@ -7,6 +7,7 @@ import os
 import atexit
 import logging
 import re
+import site_init
 
 AddOption('--gff', dest='gff', type='string', nargs=1,
 action='store', help='gff file')
@@ -53,11 +54,10 @@ if env['PREFIX']:
     logger = logging.getLogger()
 
 #Add custom functions to environment
-blast_besthit_bld = Builder(action = BLAST_BESTHITS)
+blast_besthit_bld = Builder(action = site_init.BLAST_BESTHITS)
 
 builders = {'BLAST_BESTHITS' : blast_besthit_bld}
 env.Append(BUILDERS = builders)
-
 #------------------------------------------------------------------------------
 #If --rmbuild=1, remove the build targets in the temporary directory
 if GetOption('rmbuild'):
