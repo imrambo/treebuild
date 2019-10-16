@@ -125,7 +125,8 @@ DMNDTBL = env['PREFIX'] + '_' + GET_BASENAME(env['DMNDDB']) + '.txt'
 blast_outfmt = ['qseqid','sseqid','pident','length','mismatch','gapopen','qstart','qend','sstart','send','evalue','bitscore','ppos','qcovhsp','qseq']
 #MESSING UP HERE
 #env.Command([DMNDTBL], [CONGENES,TARGETGENES,env['DMNDDB']], 'diamond %s --threads %d --db ${SOURCES[2]} --out $TARGET --header --more-sensitive --outfmt 6 %s' % (env['DMNDMETHOD'], env['DMNDTHREAD'], ' '.join(blast_outfmt)))
-env.Command([DMNDTBL], [DEREPGENES,env['DMNDDB']], 'diamond %s --query ${SOURCES[0]} --threads %d --db ${SOURCES[1]} --out $TARGET --header --more-sensitive --outfmt 6 %s' % (env['DMNDMETHOD'], env['DMNDTHREAD'], ' '.join(blast_outfmt)))
+diamond_action = 'diamond %s --query ${SOURCES[0]} --threads %d --db ${SOURCES[1]} --out $TARGET --header --more-sensitive --outfmt 6 %s' % (env['DMNDMETHOD'], env['DMNDTHREAD'], ' '.join(blast_outfmt))
+env.Command([DMNDTBL], [DEREPGENES,env['DMNDDB']], diamond_action)
 
 # logging.info('Run DIAMOND')
 
