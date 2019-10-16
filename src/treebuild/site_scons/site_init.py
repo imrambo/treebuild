@@ -35,7 +35,7 @@ def REMOVE_BUILD(source):
         pass
     return None
 #------------------------------------------------------------------------------
-def BLAST_BESTHITS(source, target, blast_names, env):
+def BLAST_BESTHITS(target, source, blast_names):
     """
     Get the best hit for each target AA sequence from HMMER3 domain
     table output. The best hit is based on:
@@ -52,4 +52,5 @@ def BLAST_BESTHITS(source, target, blast_names, env):
     blast_agg = blasttbl.groupby(['target_name'], as_index = False).agg(aggregations)
     #return blast_agg
     blast_agg.to_csv(target, sep = '\t', encoding='utf-8', header = True, index = False)
+
     return None
