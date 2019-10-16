@@ -21,7 +21,7 @@ pullseq -N -i ${SOURCES[2]} --min %s --max %s > ${TARGETS[1]}
 )
 #------------------------------------------------------------------------------
 #Get hits for surrounding genes
-env.Command([TARGETACC,GFF,TARGETACC_GENEID,GENES], [CONGENES],
+env.Command([CONGENES], [env['TARGETACC'],GFF,TARGETACC_GENEID,GENES],
 """
 grep -f ${SOURCES[0]} ${SOURCES[1]} | \
 grep "[[:space:]]CDS[[:space:]]" | \
