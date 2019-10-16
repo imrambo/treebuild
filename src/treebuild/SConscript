@@ -2,8 +2,10 @@ Import('env')
 import os
 import logging
 
-TARGETGENES = os.path.join(str(env['OUTDIR']), '%s_proteins.faa' % str(env['PREFIX']))
-TARGETACC_GENEID = os.path.join(env['OUTDIR'], env['PREFIX'] + '_target_hit_accessions.txt')
+#TARGETGENES = os.path.join(env['OUTDIR'], env['PREFIX'] + '_proteins.faa')
+#TARGETACC_GENEID = os.path.join(env['OUTDIR'], env['PREFIX'] + '_target_hit_accessions.txt')
+TARGETGENES = env['PREFIX'] + '_proteins.faa'
+TARGETACC_GENEID = env['PREFIX'] + '_target_hit_accessions.txt'
 
 #Get hits for target gene
 env.Command([TARGETACC_GENEID,TARGETGENES], [env['TARGETACC'],env['GFF'],env['SEQFILE']],
