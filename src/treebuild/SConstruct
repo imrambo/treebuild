@@ -14,8 +14,8 @@ AddOption('--outdir', dest = 'outdir', type = 'string', nargs = 1,
 action = 'store', help = 'path to output directory')
 AddOption('--minlen', dest = 'minlen', type = 'int', nargs = 1,
 action = 'store', help = 'minimum sequence length')
-AddOption('--maxlen', dest = 'maxlen', type = 'int', nargs = *,
-action = 'store', help = 'minimum sequence length')
+AddOption('--maxlen', dest = 'maxlen', type = 'int', nargs = 1,
+action = 'store', default = 10000, help = 'maximum sequence length')
 AddOption('--accessions', dest = 'accessions', type = 'string',
 nargs = 1, action = 'store', help = 'gene accessions to target')
 AddOption('--dmnd_thread', dest = 'dmnd_thread', type = 'string',
