@@ -117,12 +117,12 @@ env.Command(['genes.fasta'], [CONGENES,TARGETGENES], """cat $SOURCES > $TARGET""
 env.Command([DEREPGENES], ['genes.fasta'], """usearch -derep_fulllength $SOURCE -output $TARGET -minseqlength 1""")
 logging.info('Run USEARCH dereplicate')
 # #------------------------------------------------------------------------------
-# #USEARCH cluster
-# CENTROIDS = env['PREFIX'] + '_derepped_cluster_centroids.faa'
-# CONSOUT = env['PREFIX'] + '_derepped_cluster_consensus.faa'
-# UC = env['PREFIX'] + '_derepped_cluster_results.faa'
-# env.Command([CENTROIDS,CONSOUT,UC], [DEREPGENES], """usearch -cluster_fast $SOURCE -id %.2f -centroids ${TARGETS[0]} -consout ${TARGETS[1]} -threads %d -uc ${TARGETS[2]}""" % (env['PCTID'], env['DMNDTHREAD']))
-# logging.info('Run USEARCH cluster_fast')
+#USEARCH cluster
+CENTROIDS = env['PREFIX'] + '_derepped_cluster_centroids.faa'
+CONSOUT = env['PREFIX'] + '_derepped_cluster_consensus.faa'
+UC = env['PREFIX'] + '_derepped_cluster_results.faa'
+env.Command([CENTROIDS,CONSOUT,UC], [DEREPGENES], """usearch -cluster_fast $SOURCE -id %.2f -centroids ${TARGETS[0]} -consout ${TARGETS[1]} -threads %d -uc ${TARGETS[2]}""" % (env['PCTID'], env['DMNDTHREAD']))
+logging.info('Run USEARCH cluster_fast')
 # #------------------------------------------------------------------------------
 # #DIAMOND
 # DMNDTBL = env['PREFIX'] + '_' + GET_BASENAME(env['DMNDDB']) + '.txt'
