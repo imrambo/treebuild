@@ -19,7 +19,7 @@ AddOption('--maxlen', dest = 'maxlen', type = 'int', nargs = 1,
 action = 'store', default = 10000, help = 'maximum sequence length')
 AddOption('--accessions', dest = 'accessions', type = 'string',
 nargs = 1, action = 'store', help = 'gene accessions to target')
-AddOption('--dmnd_thread', dest = 'dmnd_thread', type = 'string',
+AddOption('--dmnd_thread', dest = 'dmnd_thread', type = 'int',
 nargs = 1, default = 1, action = 'store', help = 'number of CPUs for DIAMOND')
 AddOption('--dmnd_method', dest = 'dmnd_method', type = 'string',
 nargs = 1, action = 'store', default = 'blastp', help = 'method for DIAMOND')
@@ -93,5 +93,5 @@ if GetOption('rmbuild'):
 
 else:
     pass
-    
+
 Export('env')
