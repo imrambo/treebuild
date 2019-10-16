@@ -124,14 +124,14 @@ UC = env['PREFIX'] + '_derepped_cluster_results.faa'
 env.Command([CENTROIDS,CONSOUT,UC], [DEREPGENES], """usearch -cluster_fast $SOURCE -id %.2f -centroids ${TARGETS[0]} -consout ${TARGETS[1]} -threads %d -uc ${TARGETS[2]}""" % (env['PCTID'], env['DMNDTHREAD']))
 logging.info('Run USEARCH cluster_fast')
 # #------------------------------------------------------------------------------
-# #DIAMOND
-# DMNDTBL = env['PREFIX'] + '_' + GET_BASENAME(env['DMNDDB']) + '.txt'
-# #DMNDOUT = env['PREFIX'] + '_' + 'nr' + '.txt'
-#
-# blast_outfmt = ['qseqid','sseqid','pident','length','mismatch','gapopen','qstart','qend','sstart','send','evalue','bitscore','ppos','qcovhsp','qseq']
-# env.Command([DMNDTBL], [CONGENES,TARGETGENES,env['DMNDDB']], 'cat ${SOURCES[:2]} | diamond %s --threads %d --db ${SOURCES[2]} --out $TARGET --header --more-sensitive --outfmt 6 %s' % (env['DMNDMETHOD'], env['DMNDTHREAD'], ' '.join(blast_outfmt)))
-# logging.info('Run DIAMOND')
-#
-# #Get best hits
-# DMNDBH = env['PREFIX'] + '_' + 'nr' + '_besthit.txt'
-# env.BLAST_BESTHITS([DMNDBH], [DMNDTBL])
+#DIAMOND
+DMNDTBL = env['PREFIX'] + '_' + GET_BASENAME(env['DMNDDB']) + '.txt'
+#DMNDOUT = env['PREFIX'] + '_' + 'nr' + '.txt'
+
+blast_outfmt = ['qseqid','sseqid','pident','length','mismatch','gapopen','qstart','qend','sstart','send','evalue','bitscore','ppos','qcovhsp','qseq']
+env.Command([DMNDTBL], [CONGENES,TARGETGENES,env['DMNDDB']], 'cat ${SOURCES[:2]} | diamond %s --threads %d --db ${SOURCES[2]} --out $TARGET --header --more-sensitive --outfmt 6 %s' % (env['DMNDMETHOD'], env['DMNDTHREAD'], ' '.join(blast_outfmt)))
+logging.info('Run DIAMOND')
+
+#Get best hits
+DMNDBH = env['PREFIX'] + '_' + 'nr' + '_besthit.txt'
+env.BLAST_BESTHITS([DMNDBH], [DMNDTBL])
