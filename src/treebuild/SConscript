@@ -40,11 +40,6 @@ def GET_BASENAME(file_path):
     else:
         basename = os.path.splitext(basename)[0]
 
-    if check_string(basename):
-        basename = basename.decode('ascii')
-    else:
-        pass
-
     return basename
 #------------------------------------------------------------------------------
 def BLAST_BESTHITS(target, source, env):
