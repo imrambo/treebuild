@@ -1,6 +1,37 @@
 #!/usr/bin/python3
+#------------------------------------------------------------------------------
+def get_basename(file_path):
+    basename = os.path.basename(file_path)
+    #Remove two extensions, e.g. foo.tar.gz becomes foo
+    if re.match(r'^.*?\.[a-z]+\.[a-z]+$', basename):
+        basename = re.findall(r'^(.*?)\.[a-z]+\.[a-z]+$', basename)[0]
+    else:
+        basename = os.path.splitext(basename)[0]
+    return basename
+#------------------------------------------------------------------------------
+def REMOVE_BUILD(source):
+    """
+    Remove intermediate build targets within a specified temporary directory.
+    """
+    if os.path.exists(source) and os.listdir(source):
+        print('removing intermediate build targets in %s' % os.path.abspath(source))
+        for tmp in [os.path.join(source, os.path.basename(str(t))) for t in BUILD_TARGETS]:
+            if os.path.isfile(tmp):
+                print('removing %s' % tmp)
+                os.remove(tmp)
+            else:
+                pass
 
-
+        if not os.listdir(source):
+            print('removing empty directory: "%s"' % source)
+            os.rmdir(source)
+        else:
+            print('directory "%s" is not empty' % source)
+    else:
+        print('Cannot delete directory "%s", does not exist' % tmpdir)
+        pass
+    return None
+#------------------------------------------------------------------------------
 def BLAST_BESTHITS(source, target, blast_names, env):
     """
     Get the best hit for each target AA sequence from HMMER3 domain
@@ -11,7 +42,7 @@ def BLAST_BESTHITS(source, target, blast_names, env):
     4. max query coverage at high-scoring segment pair
     """
     import pandas as pd
-    
+
     blasttbl = pd.read_csv(source, comment='#', header=None,
     names = blast_names, sep = '\s+')
 
