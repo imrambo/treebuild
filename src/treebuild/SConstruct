@@ -77,7 +77,7 @@ env = Environment(MINLEN=GetOption('minlen'),
                           PREFIX=GetOption('prefix'),
                           PCTID=GetOption('pctid'))
 if env['PREFIX']:
-    build_tmp = get_basename(env['PREFIX'] + '_build')
+    build_tmp = env['PREFIX'] + '_build'
     SConscript(['SConscript'], exports='env', variant_dir=build_tmp, duplicate=0)
 
     logging_format = '%(levelname)s %(asctime)s - $(message)s'
