@@ -1,4 +1,7 @@
 #!/usr/bin/python3
+import os
+import re
+import pandas as pd
 #------------------------------------------------------------------------------
 def get_basename(file_path):
     basename = os.path.basename(file_path)
@@ -41,7 +44,6 @@ def BLAST_BESTHITS(source, target, blast_names, env):
     3. max alignment length
     4. max query coverage at high-scoring segment pair
     """
-    import pandas as pd
 
     blasttbl = pd.read_csv(source, comment='#', header=None,
     names = blast_names, sep = '\s+')
