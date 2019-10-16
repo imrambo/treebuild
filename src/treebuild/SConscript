@@ -109,7 +109,7 @@ pullseq -N -i ${SOURCES[2]} --min %d --max %d > $TARGET
 #USEARCH dereplicate
 DEREPGENES = env['PREFIX'] + '_derepped.faa'
 env.Command(['all_genes.fasta'], [CONGENES,TARGETGENES], """cat $SOURCES > $TARGET""")
-env.Command([DEREPGENES], ['all_genes.fasta'], """usearch -derep_fulllength $SOURCE -output $TARGET -minseqlength 1""")
+env.Command([DEREPGENES], ['all_genes.fasta'], """usearch -derep_fulllength $SOURCE -output $TARGET -minseqlength 1 -threads %d""" % env['DMNDTHREAD'])
 logging.info('Run USEARCH dereplicate')
 # #------------------------------------------------------------------------------
 #USEARCH cluster
