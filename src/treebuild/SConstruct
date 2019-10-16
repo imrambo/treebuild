@@ -19,7 +19,7 @@ action = 'store', help = 'minimum sequence length')
 AddOption('--accessions', dest = 'accessions', type = 'string',
 nargs = 1, action = 'store', help = 'gene accessions to target')
 AddOption('--dmnd_thread', dest = 'dmnd_thread', type = 'string',
-nargs = 1, action = 'store', help = 'number of CPUs for DIAMOND')
+nargs = 1, default = 1, action = 'store', help = 'number of CPUs for DIAMOND')
 AddOption('--dmnd_method', dest = 'dmnd_method', type = 'string',
 nargs = 1, action = 'store', default = 'blastp', help = 'method for DIAMOND')
 AddOption('--dmnd_db', dest = 'dmnd_db', type = 'string',
