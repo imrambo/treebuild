@@ -19,7 +19,7 @@ def check_string(source, env):
     else :
         return False
 #------------------------------------------------------------------------------
-def GET_BASENAME(file_path, env):
+def GET_BASENAME(file_path):
     """
     Get the basename of a file and remove all extensions
     """
