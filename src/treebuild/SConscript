@@ -22,7 +22,7 @@ pullseq -N -i ${SOURCES[2]} --min %s --max %s > ${TARGETS[1]}
 #------------------------------------------------------------------------------
 CONGENES = env['PREFIX'] + '_neighbor_genes.faa'
 #Get hits for surrounding genes
-env.Command([CONGENES], [env['TARGETACC'],GFF,TARGETACC_GENEID,GENES],
+env.Command([CONGENES], [env['TARGETACC'],env['GFF'],env['SEQFILE']],
 """
 grep -f ${SOURCES[0]} ${SOURCES[1]} | \
 grep "[[:space:]]CDS[[:space:]]" | \
@@ -35,7 +35,7 @@ grep -f - ${SOURCES[1]} | \
 grep "[[:space:]]CDS[[:space:]]" | \
 cut -f2 | \
 grep -vf - ${SOURCES[1]} | \
-pullseq -N -i ${SOURCES[3]} --min %s --max %s > $TARGET
+pullseq -N -i ${SOURCES[2]} --min %s --max %s > $TARGET
 """ % (env['MINLEN'], env['MAXLEN'])
 )
 
